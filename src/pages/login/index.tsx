@@ -2,28 +2,24 @@
 import React, { useState } from "react";
 import { useRouter } from 'next/router';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
-import {
-  Avatar,
-  Button,
-  CssBaseline,
-  TextField,
-  FormControlLabel,
-  Checkbox,
-  Link,
-  Paper,
-  Container,
-  Box,
-  Grid,
-  Typography,
-  InputAdornment,
-  CircularProgress,
-  Snackbar,
-  Alert
-} from "@mui/material";
-import {
-  Email,
-  Lock,
-} from '@mui/icons-material';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import CssBaseline from '@mui/material/CssBaseline';
+import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Paper from '@mui/material/Paper';
+import Container from '@mui/material/Container';
+import Box from '@mui/material/Box';
+import Grid from '@mui/material/Grid';
+import Link from '@mui/material/Link';
+import Typography from '@mui/material/Typography';
+import InputAdornment from '@mui/material/InputAdornment';
+import CircularProgress from '@mui/material/CircularProgress';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Email from '@mui/icons-material/Email';
+import Lock from '@mui/icons-material/Lock';
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
@@ -64,9 +60,20 @@ const LoginPage: React.FC = () => {
       if (response.ok) {
         const result = await response.json();
         console.log(result);
-        localStorage.setItem("token", "authenticated");
-        setSubmitSuccess(true);
-        router.push('/dashboard');
+
+        await Promise.all([
+          localStorage.setItem('token', 'authenticated'),
+          localStorage.setItem('userRole', result.role)
+        ]);
+
+        const storedRole = await localStorage.getItem('userRole');
+        if (storedRole === result.role) {
+          setSubmitSuccess(true);
+          await router.push('/home');
+          return result;
+        } else {
+          setSubmitError("Failed to store user role in local storage.");
+        }
       } else {
         const error = await response.json();
         setSubmitError(error.message);
@@ -102,19 +109,17 @@ const LoginPage: React.FC = () => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
-            position: 'relative',
+            alignItems: 'center'
           }}
         >
-          <div style={{ maxWidth: '90%', maxHeight: 'auto', position: 'relative' }}>
+          <div style={{ maxWidth: '90%', maxHeight: 'auto' }}>
             <img
               src="https://img.freepik.com/free-vector/happy-farmers-selling-fresh-vegetables_74855-10754.jpg?t=st=1722830501~exp=1722834101~hmac=e7a4a79ff094d5f8d8fc87c4301ad9eafa96d8c67ffe5214226f266c9a10ceb1&w=740"
               alt="Login"
               style={{
                 width: '100%',
                 height: 'auto',
-                objectFit: 'contain',
-                clipPath: 'path("M0,40 Q40,0 80,40 T160,40 Q120,80 80,40 T0,40 Z")', // Example of a leaf-like shape
+                objectFit: 'contain'
               }}
             />
           </div>
@@ -247,16 +252,12 @@ const LoginPage: React.FC = () => {
                 </Alert>
               </Snackbar>
               <Grid container>
-                <Grid item xs>
                   <Link href="#" variant="body2">
                     Forgot password?
                   </Link>
-                </Grid>
-                <Grid item>
                   <Link href="/register" variant="body2">
                     {"Don't have an account? Sign Up"}
                   </Link>
-                </Grid>
               </Grid>
             </Box>
           </Box>
