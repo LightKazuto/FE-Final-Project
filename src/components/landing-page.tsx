@@ -2,7 +2,7 @@ import React from "react";
 
 const LandingPage = () => {
   return (
-    <div className="flex items-center mt-24 text-black">
+    <div className="flex items-center  text-black">
       <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-6 max-w-6xl mx-auto min-w-full bg-custom-bg">
         <div className="flex flex-col items-center justify-center p-6 rounded-l-lg md:col-span-1 lg:col-span-2">
           <h2 className="text-5xl font-bold mb-4 text-center w-4/4">
@@ -11,14 +11,13 @@ const LandingPage = () => {
           <p className="mb-6 text-center w-3/4">
             Whatever you want from local stores, brought right to your door
           </p>
-          <div className="flex items-center border border-gray-300 rounded-lg px-4 py-2 bg-white w-96 h-1/5">
-            <i className="fas fa-map-marker-alt mr-2 text-gray-600 "></i>
+          <div className="flex items-center border border-gray-300 rounded-lg px-4 py-2 bg-white w-96 h-54">
+            <i className="fas fa fa-search mr-2 text-gray-600 "></i>
             <input
               type="text"
-              placeholder="Enter your location"
+              placeholder="Search Your Vegetable You Need"
               className="flex-grow outline-none text-center"
             />
-            <i className="fas fa-arrow-right text-gray-600 ml-2"></i>
           </div>
         </div>
 

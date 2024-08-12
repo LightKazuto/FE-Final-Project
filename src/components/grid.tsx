@@ -36,8 +36,10 @@ export default function Home() {
   ]);
 
   return (
-    <div className="flex flex-col items-center w-full py-24 bg-white">
-      <div className="flex flex-wrap justify-center gap-8 w-4/6  p-10">
+    <div className="flex flex-col items-center w-full py-24 bg-white relative inline-block">
+      <div className=" w-4/6 border-t-4  border-gray-500  ">
+      <div className='flex flex-wrap justify-center gap-8 p-10'>
+
         {products.map(product => (
           <ProductCard
             key={product.id}
@@ -47,6 +49,7 @@ export default function Home() {
             description={product.description}
           />
         ))}
+        </div>
       </div>
     </div>
   );

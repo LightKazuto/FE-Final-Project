@@ -3,7 +3,7 @@ import ButtonAppBar from '../../components/Header';
 import LandingPage from '../../components/landing-page';
 import Grid from '../../components/grid';
 
-function Dashboard() {
+function Home() {
 
     return (
         <div>
@@ -22,4 +22,4 @@ function Dashboard() {
     )
 }
 
-export default Dashboard
+export default Home;
