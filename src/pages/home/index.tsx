@@ -1,6 +1,8 @@
 "use client";
 import LandingPage from '../../components/landing-page';
-import Grid from '../../components/grid';
+import Grid from '../../components/comingSoonMarket';
+import PopularVeg from '../../components/popularVeg';
+import PopularFruit from '../../components/popularFruitProduct';
 
 function Home() {
 
@@ -12,6 +14,14 @@ function Home() {
 
             <div>
                 <Grid />
+            </div>
+
+            <div>
+                <PopularVeg />
+            </div>
+
+            <div>
+                <PopularFruit />
             </div>
         </div>
     )

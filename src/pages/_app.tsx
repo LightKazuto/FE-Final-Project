@@ -1,27 +1,26 @@
-import type { AppProps } from 'next/app'
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import './styles/globals.css';
+import type { AppProps } from "next/app";
+import { useEffect, useState } from "react";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import "./globals.css"; // Make sure to use the correct path
+import Navbar from "../components/navbar";
+import { useRouter } from "next/router";
+import Home from "./home/index";
 
 const theme = createTheme();
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [userRole, setUserRole] = useState<"user" | "seller" | "guest">(
-    "guest"
-  );
+  const [userRole, setUserRole] = useState<"user" | "seller" | "guest">("guest");
+  const [initialRender, setInitialRender] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const storedUserRole = localStorage.getItem("userRole") as
-      | "user"
-      | "seller"
-      | "guest"
-      | null;
+    const storedUserRole = localStorage.getItem("userRole") as "user" | "seller" | "guest" | null;
     if (storedUserRole) {
       setUserRole(storedUserRole);
     }
+    setInitialRender(false); // Mark initial render as complete
   }, []);
-
-  const router = useRouter();
 
   const handleLogout = () => {
     localStorage.clear();
@@ -29,11 +28,19 @@ function MyApp({ Component, pageProps }: AppProps) {
     router.push("/login");
   };
 
+  // Conditional component rendering
+  const renderComponent = () => {
+
+    if (router.pathname === '/') {
+      return <Home />;
+    }
+
+  };
+
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
       <Navbar userRole={userRole} onLogout={handleLogout} />
-      <Component {...pageProps} />
+      {renderComponent()}
     </ThemeProvider>
   );
 }
