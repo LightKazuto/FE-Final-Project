@@ -4,7 +4,7 @@ import duniaDurian from '../assets/duniaDurian.png';
 
 interface Market {
   id: number;
-  image: boolean;
+  image: string;
   store_name: string;
   description: string;
 }
@@ -13,7 +13,7 @@ export default function CoomingSoonMarket() {
   const [products, setProducts] = useState<Market[]>([
     {
       id: 1,
-      image: duniaDurian,
+      image: "",
       store_name: "Dunia Durian",
       description: "Durian lokal dengan berbagai variasi lokal dan import",
     },
