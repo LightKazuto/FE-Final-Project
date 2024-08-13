@@ -11,14 +11,6 @@ const LandingPage = () => {
           <p className="mb-6 text-center w-3/4">
             Whatever you want from local stores, brought right to your door
           </p>
-          <div className="flex items-center border border-gray-300 rounded-lg px-4 py-2 bg-white w-96 h-54">
-            <i className="fas fa fa-search mr-2 text-gray-600 "></i>
-            <input
-              type="text"
-              placeholder="Search Your Vegetable You Need"
-              className="flex-grow outline-none text-center"
-            />
-          </div>
         </div>
 
         <div className="md:col-span-4 lg:col-span-3 h-96">
