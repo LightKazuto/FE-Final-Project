@@ -2,10 +2,9 @@ import type { AppProps } from "next/app";
 import { useEffect, useState } from "react";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
-import "./globals.css"; // Make sure to use the correct path
+import "./globals.css"; 
 import Navbar from "../components/navbar";
 import { useRouter } from "next/router";
-import Home from "./home/index";
 
 const theme = createTheme();
 
@@ -19,7 +18,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (storedUserRole) {
       setUserRole(storedUserRole);
     }
-    setInitialRender(false); // Mark initial render as complete
   }, []);
 
   const handleLogout = () => {
@@ -28,19 +26,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     router.push("/login");
   };
 
-  // Conditional component rendering
-  const renderComponent = () => {
-
-    if (router.pathname === '/') {
-      return <Home />;
-    }
-
-  };
 
   return (
     <ThemeProvider theme={theme}>
       <Navbar userRole={userRole} onLogout={handleLogout} />
-      {renderComponent()}
+      <Component {...pageProps} />
     </ThemeProvider>
   );
 }
