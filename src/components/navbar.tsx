@@ -73,9 +73,12 @@ const Navbar: React.FC<NavbarProps> = ({ userRole, onLogout }) => {
             )}
             {userRole === "seller" && (
               <>
-                <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <a
+                  href="/register_product"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
                   New Product
-                </button>
+                </a>
                 <button
                   onClick={onLogout}
                   className="text-gray-700 hover:text-gray-900"

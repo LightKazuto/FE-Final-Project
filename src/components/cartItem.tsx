@@ -20,7 +20,7 @@ const CartItem: React.FC<CartItemProps> = ({
             <a href="#" className="shrink-0 md:order-1">
               <img src={item.imageUrl} alt={item.name} className="h-20 w-20" />
             </a>
-            <label for="counter-input" className="sr-only">
+            <label htmlFor="counter-input" className="sr-only">
               Choose quantity:
             </label>
             <div className="flex items-center justify-between md:order-3 md:justify-end">
