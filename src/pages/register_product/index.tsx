@@ -17,7 +17,7 @@ const ProductRegisterPage: React.FC = () => {
 
   return (
     <div>
-      <BannerRegisterProduct />
+      {/* <BannerRegisterProduct /> */}
       <Container
         component="main"
         maxWidth="md"
@@ -32,27 +32,8 @@ const ProductRegisterPage: React.FC = () => {
       >
         <Grid container component={Paper} elevation={6}>
           <CssBaseline />
-          <Grid item xs={12} sm={8} md={5}>
+          <Grid item xs={12} sm={12} md={12} lg={12} xl={12}>
             <DynamicRegisterProduct />
-          </Grid>
-          <Grid
-            item
-            xs={false}
-            sm={4}
-            md={7}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <div style={{ maxWidth: "90%", maxHeight: "auto" }}>
-              <img
-                src="your-image-url-here"
-                alt="Product Registration"
-                style={{ width: "100%", height: "auto", objectFit: "contain" }}
-              />
-            </div>
           </Grid>
         </Grid>
       </Container>
