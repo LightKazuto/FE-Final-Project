@@ -12,6 +12,7 @@ import InputLabel from "@mui/material/InputLabel";
 import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
+import InputAdornment from "@mui/material/InputAdornment";
 
 interface ProductFormInput {
   productName: string;
@@ -88,6 +89,11 @@ const RegisterProduct: React.FC = () => {
             sx={{ mt: 2 }}
             fullWidth
             type="number"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">Rp</InputAdornment>
+              ),
+            }}
           />
         )}
       />
@@ -112,7 +118,9 @@ const RegisterProduct: React.FC = () => {
         defaultValue=""
         render={({ field }) => (
           <FormControl fullWidth>
-            <InputLabel id="category-label">Category</InputLabel>
+            <InputLabel id="category-label" variant="filled">
+              Category
+            </InputLabel>
             <Select
               {...field}
               labelId="category-label"
@@ -132,7 +140,9 @@ const RegisterProduct: React.FC = () => {
         defaultValue=""
         render={({ field }) => (
           <FormControl fullWidth>
-            <InputLabel id="type-label">Type</InputLabel>
+            <InputLabel id="type-label" variant="filled">
+              Type
+            </InputLabel>
             <Select {...field} labelId="type-label" label="Type" sx={{ mt: 2 }}>
               <MenuItem value="standard">Standard</MenuItem>
               <MenuItem value="premium">Premium</MenuItem>
