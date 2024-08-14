@@ -78,3 +78,69 @@ Berikut adalah struktur inti dari proyek Mobilisayur Next.js ini :
 - 'routes' : Direktori ini dapat digunakan untuk mendefinisikan rute-rute API atau logika navigasi khusus. File atau konfigurasi di sini sering digunakan untuk mengelola proteksi rute dan middleware.
 
 ## Role Akses
+Aplikasi ini mendukung beberapa peran akses untuk mengatur hak dan izin pengguna dalam mengakses berbagai fitur. Berikut adalah penjelasan terkait peran **User**, **Guest**, dan **Seller**.
+
+### 1. Guest (Tamu)
+
+Peran **Guest** adalah pengguna yang belum terautentikasi atau belum login ke dalam sistem. Akses yang dimiliki sangat terbatas.
+
+#### Hak Akses:
+- Mengakses halaman beranda (Home).
+- Melihat produk atau layanan di halaman **Dashboard** (hanya mode baca).
+- Mendaftar sebagai pengguna baru melalui halaman **Register**.
+- Login ke dalam sistem melalui halaman **Login**.
+- Tidak dapat mengakses halaman atau fitur yang memerlukan autentikasi (seperti profil pengguna atau penjualan).
+
+#### Pembatasan:
+- Tidak dapat mengakses halaman profil pengguna atau fitur khusus pengguna terdaftar.
+- Tidak dapat melakukan transaksi atau interaksi dengan sistem sebagai pengguna terverifikasi.
+
+### 2. User (Pengguna Terdaftar)
+
+Peran **User** diberikan kepada pengguna yang telah mendaftar dan login ke dalam sistem. Pengguna ini memiliki akses yang lebih luas dibandingkan dengan **Guest**.
+
+#### Hak Akses:
+- Mengakses seluruh halaman yang dapat dilihat oleh **Guest**.
+- Mengelola profil pengguna (mengubah informasi pribadi, kata sandi, dll.).
+- Melihat riwayat transaksi atau pesanan.
+- Melakukan pembelian atau pemesanan produk.
+- Berinteraksi dengan fitur-fitur umum seperti memberikan ulasan dan menyukai produk.
+- Tidak dapat mengakses halaman yang diperuntukkan khusus untuk **Seller** (misalnya halaman untuk mengelola produk yang dijual).
+
+#### Pembatasan:
+- Tidak dapat menjual produk atau layanan.
+- Tidak memiliki akses ke fitur atau halaman yang dikhususkan untuk penjual.
+
+### 3. Seller (Penjual)
+
+Peran **Seller** adalah pengguna yang tidak hanya terdaftar tetapi juga diverifikasi sebagai penjual. **Seller** dapat mengelola produk atau layanan mereka di dalam platform.
+
+#### Hak Akses:
+- Mengakses seluruh fitur yang dimiliki oleh **User**.
+- Mengakses halaman **Dashboard** khusus penjual untuk mengelola produk.
+- Menambah, mengedit, atau menghapus produk yang dijual.
+- Mengelola pesanan pelanggan dan melihat riwayat transaksi penjualan.
+- Melihat laporan penjualan dan statistik kinerja produk.
+
+#### Pembatasan:
+- Tidak dapat mengakses fitur pengguna umum tertentu yang tidak relevan dengan aktivitas penjualan (misalnya, fitur pembelian untuk pelanggan).
+
+### Ringkasan Hak Akses Berdasarkan Peran
+
+| Fitur                         | Guest | User  | Seller |
+|-------------------------------|-------|-------|--------|
+| Mengakses Halaman Beranda      | ✅    | ✅    | ✅     |
+| Melihat Produk di Dashboard    | ✅    | ✅    | ✅     |
+| Login ke Sistem                | ✅    | ✅    | ✅     |
+| Register (Mendaftar)           | ✅    | ❌    | ❌     |
+| Mengelola Profil               | ❌    | ✅    | ✅     |
+| Melakukan Pembelian            | ❌    | ✅    | ✅     |
+| Menambah/Edit/Hapus Produk     | ❌    | ❌    | ✅     |
+| Mengelola Pesanan Pelanggan    | ❌    | ❌    | ✅     |
+| Melihat Laporan Penjualan      | ❌    | ❌    | ✅     |
+
+### Pengelolaan Role Akses
+
+1. **Guest**: Role default untuk pengguna yang tidak terautentikasi. Dapat diatur melalui middleware yang memastikan akses ke halaman tertentu hanya tersedia setelah login.
+2. **User**: Role ini ditetapkan setelah pengguna berhasil login dan terverifikasi.
+3. **Seller**: Role ini diberikan kepada pengguna yang telah diverifikasi sebagai penjual melalui proses internal atau administratif di platform.
