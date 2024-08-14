@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     if (storedUserRole) {
       setUserRole(storedUserRole);
     }
-  }, []);
+  }, [router.pathname]);
 
   const handleLogout = () => {
     localStorage.clear();
