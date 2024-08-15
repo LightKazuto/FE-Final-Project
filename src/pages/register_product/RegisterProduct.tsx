@@ -15,6 +15,9 @@ import { Typography } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
 import { CldUploadWidget } from "next-cloudinary";
 
+const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
+const apiKey = process.env.CLOUDINARY_API_KEY;
+
 interface ProductFormInput {
   productName: string;
   price: number;
