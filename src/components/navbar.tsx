@@ -31,7 +31,7 @@ const Navbar: React.FC<NavbarProps> = ({ userRole, onLogout }) => {
                 Home
               </a>
               <a
-                href="#"
+                href="/products"
                 className="py-4 px-2 text-gray-500 font-semibold hover:text-green-500 transition duration-300"
               >
                 Products
