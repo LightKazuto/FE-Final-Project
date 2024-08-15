@@ -13,6 +13,7 @@ import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
+import { CldUploadWidget } from "next-cloudinary";
 
 interface ProductFormInput {
   productName: string;
@@ -22,7 +23,8 @@ interface ProductFormInput {
   type: string;
   stock: number;
   discount: number;
-  productImage: string;
+  //   productImage: string;
+  productUpload: boolean;
   //   image: FileList;
 }
 
@@ -47,7 +49,15 @@ const RegisterProduct: React.FC = () => {
       formData.append("type", data.type);
       formData.append("stock", data.stock.toString());
       formData.append("discount", data.discount.toString());
-      formData.append("productImage", data.productImage);
+      //   formData.append("productImage", data.productImage);
+      if (typeof data.productUpload === "boolean") {
+        // If it's a boolean, append it as a string
+        formData.append("productUpload", data.productUpload.toString());
+      } else {
+        // If it's not a boolean, it must be a Blob object, so append it as is
+        formData.append("productUpload", data.productUpload);
+      }
+
       //   formData.append("image", data.image[0]);
 
       // Submit product data to your backend
@@ -179,7 +189,7 @@ const RegisterProduct: React.FC = () => {
           />
         )}
       />
-      <Controller
+      {/* <Controller
         name="productImage"
         control={control}
         defaultValue=""
@@ -191,23 +201,26 @@ const RegisterProduct: React.FC = () => {
             fullWidth
           />
         )}
-      />
-      {/* <Controller
-        name="image"
-        control={control}
-        defaultValue={undefined}
-        render={({ field: { onChange, onBlur, ref } }) => (
-          <input
-            accept="image/*"
-            type="file"
-            onChange={(e) => {
-              onChange(e.target.files); // Set the files using the onChange method provided by react-hook-form
-            }}
-            onBlur={onBlur}
-            ref={ref}
-          />
-        )}
       /> */}
+      <Controller
+        name="productUpload"
+        control={control}
+        render={({ field }) => (
+          <>
+            <CldUploadWidget uploadPreset="cloudinary_upload_next_app">
+              {({ open }) => (
+                <Button
+                  type="button"
+                  variant="contained"
+                  onClick={() => open()}
+                >
+                  Upload Image
+                </Button>
+              )}
+            </CldUploadWidget>
+          </>
+        )}
+      />
       <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
         {isSubmitting ? "Registering..." : "Register Product"}
       </Button>
