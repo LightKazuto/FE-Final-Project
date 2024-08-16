@@ -44,7 +44,7 @@ export default function CoomingSoonMarket() {
           Coming Soon Market
         </p>
       </div>
-      <div className="w-4/6 border-t-5 border-gray-300 shadow-2xl">
+      <div className="w-4/6 border-t-5 border-gray-300 shadow-2xl pt-10">
         <div className="flex flex-wrap justify-center gap-8 p-10 mt-5">
           {products.map((product) => (
             <div
