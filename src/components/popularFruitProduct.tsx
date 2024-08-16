@@ -43,7 +43,7 @@ export default function PopularFruit() {
           Popular Fruits Product
         </p>
       </div>
-      <div className="w-4/6 border-t-5 border-gray-300 shadow-2xl ">
+      <div className="w-4/6 border-t-5 border-gray-300 shadow-2xl pt-10">
         <div className="flex flex-wrap justify-center gap-8 p-10 mt-5">
           {fruits.map((product) => (
             <div
