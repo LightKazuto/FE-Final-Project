@@ -37,7 +37,7 @@ export default function PopularFruit() {
   ]);
 
   return (
-    <div className="flex flex-col items-center w-full bg-white relative inline-block pb-16">
+    <div className="flex flex-col items-center w-full bg-white relative inline-block pb-16 pt-16">
       <div className="bg-white w-1/4 absolute top-30 right-30 left-30 bottom-30 ">
         <p className="text-3xl font-bold text-center text-gray-600 mt-[-20px]">
           Popular Fruits Product
