@@ -13,10 +13,11 @@ import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const apiKey = process.env.CLOUDINARY_API_KEY;
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface ProductFormInput {
   productName: string;
@@ -26,9 +27,8 @@ interface ProductFormInput {
   type: string;
   stock: number;
   discount: number;
-  //   productImage: string;
-  productUpload: boolean;
-  //   image: FileList;
+  image_url: string;
+  image: FileList;
 }
 
 const RegisterProduct: React.FC = () => {
@@ -38,6 +38,7 @@ const RegisterProduct: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<ProductFormInput>();
   const [submitSuccess, setSubmitSuccess] = useState(false);
+  const [resource, setResource] = useState<string | CloudinaryUploadWidgetInfo | undefined>(undefined);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -52,23 +53,22 @@ const RegisterProduct: React.FC = () => {
       formData.append("type", data.type);
       formData.append("stock", data.stock.toString());
       formData.append("discount", data.discount.toString());
-      //   formData.append("productImage", data.productImage);
-      if (typeof data.productUpload === "boolean") {
-        // If it's a boolean, append it as a string
-        formData.append("productUpload", data.productUpload.toString());
-      } else {
-        // If it's not a boolean, it must be a Blob object, so append it as is
-        formData.append("productUpload", data.productUpload);
-      }
+      formData.append("image_url", data.image_url.toString());
 
-      //   formData.append("image", data.image[0]);
+    //   if (typeof data.image_url === "boolean") {
+    //     // If it's a boolean, append it as a string
+    //     formData.append("image_url", data.image_url.toString());
+    //   } else {
+    //     // If it's not a boolean, it must be a Blob object, so append it as is
+    //     formData.append("image_url", data.image_url);
+    //   }
 
-      // Submit product data to your backend
-      // e.g., const response = await fetch('/api/products', { method: 'POST', body: formData });
 
+      const response = await fetch(`${apiBaseUrl}/registerProduct`, { method: 'POST', body: formData });
       setSubmitSuccess(true);
       router.push("/products"); // Navigate to products page or wherever appropriate
     } catch (error) {
+      console.error(error);
       setSubmitError("Failed to register product");
     }
   };
@@ -192,35 +192,28 @@ const RegisterProduct: React.FC = () => {
           />
         )}
       />
-      {/* <Controller
-        name="productImage"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Product Image Link"
-            variant="filled"
-            fullWidth
-          />
-        )}
-      /> */}
       <Controller
-        name="productUpload"
+        name="image_url"
         control={control}
         render={({ field }) => (
           <>
-            <CldUploadWidget uploadPreset="cloudinary_upload_next_app">
+            <CldUploadWidget
+              uploadPreset="cloudinary_upload_next_app"
+              onSuccess={(result, { widget }) => {
+                setResource(result?.info); // { public_id, secure_url, etc }
+                console.log(resource);
+              }}
+            >
               {({ open }) => (
-                <Button
-                  type="button"
-                  variant="contained"
-                  onClick={() => open()}
-                >
-                  Upload Image
-                </Button>
-              )}
-            </CldUploadWidget>
+                    <Button
+                    type="button"
+                    variant="contained"
+                    onClick={() => open()}
+                    >
+                    Upload Image
+                    </Button>
+                )}
+                </CldUploadWidget>
           </>
         )}
       />
