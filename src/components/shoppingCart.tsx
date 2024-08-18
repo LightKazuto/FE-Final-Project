@@ -9,6 +9,7 @@ import {
 } from "../types";
 
 const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+let token: string | null = null;
 
 const ShoppingCart: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
@@ -20,12 +21,12 @@ const ShoppingCart: React.FC = () => {
   });
 
   useEffect(() => {
+    token = localStorage.getItem("access_token");
     fetchCartItems();
   }, []);
 
   const fetchCartItems = async () => {
     try {
-      const token = localStorage.getItem("access_token");
 
       if (!token) {
         throw new Error("No authentication token found");
@@ -53,21 +54,22 @@ const ShoppingCart: React.FC = () => {
     }
   };
 
-  const updateQuantity = async (itemId: string, newQuantity: number) => {
+  const updateQuantity = async (itemId: string, quantity: number) => {
     try {
-      await fetch(`/api/cart/item/${itemId}`, {
+      const response = await fetch(`${apiBaseUrl}/updateCartItemQuantity`, {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ quantity: newQuantity }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ itemId, quantity }),
       });
-      // Optimistically update UI
-      setCartItems((prevItems) =>
-        prevItems.map((item) =>
-          item.id === itemId ? { ...item, quantity: newQuantity } : item
-        )
-      );
-      // Refetch to ensure consistency with server
-      fetchCartItems();
+
+      if (response.ok) {
+        fetchCartItems();
+      } else {
+        console.error("Failed to update quantity");
+      }
     } catch (error) {
       console.error("Failed to update quantity:", error);
     }
@@ -75,12 +77,21 @@ const ShoppingCart: React.FC = () => {
 
   const deleteItem = async (itemId: string) => {
     try {
-      await fetch(`/api/cart/item/${itemId}`, { method: "DELETE" });
-      // Optimistically update UI
-      setCartItems((prevItems) =>
-        prevItems.filter((item) => item.id !== itemId)
-      );
-      // Refetch to ensure consistency with server
+      const response = await fetch(`${apiBaseUrl}/deleteCartItem`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          id: itemId,
+        }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("Failed to delete item");
+      }
+  
       fetchCartItems();
     } catch (error) {
       console.error("Failed to delete item:", error);
