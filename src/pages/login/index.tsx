@@ -63,7 +63,8 @@ const LoginPage: React.FC = () => {
 
         await Promise.all([
           localStorage.setItem('token', 'authenticated'),
-          localStorage.setItem('userRole', result.role)
+          localStorage.setItem('userRole', result.role),
+          localStorage.setItem('access_token', result.access_token),
         ]);
 
         const storedRole = await localStorage.getItem('userRole');

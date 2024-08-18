@@ -13,16 +13,11 @@ const CartItem: React.FC<CartItemProps> = ({
   onDeleteItem,
 }) => {
   return (
-    <div className="mx-auto w-full flex-none lg:max-w-2xl xl:max-w-3xl">
-      <div className="space-y-6">
         <div className="rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-6">
           <div className="space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0">
             <a href="#" className="shrink-0 md:order-1">
-              <img src={item.imageUrl} alt={item.name} className="h-20 w-20" />
+              <img src={item.image_url} alt={item.product_name} className="h-20 w-20" />
             </a>
-            <label htmlFor="counter-input" className="sr-only">
-              Choose quantity:
-            </label>
             <div className="flex items-center justify-between md:order-3 md:justify-end">
               <div className="flex items-center">
                 <button
@@ -56,7 +51,7 @@ const CartItem: React.FC<CartItemProps> = ({
                   data-input-counter
                   className="w-10 shrink-0 border-0 bg-transparent text-center text-sm font-medium text-gray-900 focus:outline-none focus:ring-0 dark:text-white"
                   placeholder=""
-                  value="2"
+                  value={item.quantity}
                   required
                 />
                 <button
@@ -83,20 +78,23 @@ const CartItem: React.FC<CartItemProps> = ({
                   </svg>
                 </button>
               </div>
-              <div className="text-end md:order-4 md:w-32">
-                <p className="text-base font-bold text-gray-900 dark:text-white">
-                  Rp {item.price.toFixed(2)}
+              <div className="text-end md:order-4 md:w-40">
+                <p className="text-base text-gray-900 dark:text-white">
+                  Rp {item.price}
+                </p>
+                <p className="mt-10 text-base font-bold text-gray-900 dark:text-white">
+                  Total: Rp {item.total_price}
                 </p>
               </div>
             </div>
             <div className="w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md">
               <a href="#">
                 <h3 className="text-base font-medium text-gray-900 hover:underline dark:text-white">
-                  {item.name}
+                  {item.product_name}
                 </h3>
               </a>
               <p className="text-sm text-gray-500 dark:text-gray-400">
-                Category: {item.category}
+                {item.description}
               </p>
 
               <div className="flex items-center gap-4">
@@ -128,20 +126,6 @@ const CartItem: React.FC<CartItemProps> = ({
             </div>
           </div>
         </div>
-        {/* <div>
-          <h3 className="text-base font-medium text-gray-900 hover:underline dark:text-white">{item.name}</h3>
-          <p className="text-sm text-gray-500 dark:text-gray-400">Category: {item.category}</p>
-          <p className="text-base font-bold text-gray-900 dark:text-white">Price: ${item.price.toFixed(2)}</p>
-          {item.discount && <p className="text-sm text-green-600">Discount: ${item.discount.toFixed(2)}</p>}
-        </div>
-        <div className="flex items-center">
-          <button onClick={() => onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))} className="text-gray-500 hover:text-gray-700">-</button>
-          <span className="mx-2 text-gray-700">{item.quantity}</span>
-          <button onClick={() => onUpdateQuantity(item.id, item.quantity + 1)} className="text-gray-500 hover:text-gray-700">+</button>
-        </div>
-        <button onClick={() => onDeleteItem(item.id)} className="text-red-600 hover:text-red-800">Remove</button> */}
-      </div>
-    </div>
   );
 };
 

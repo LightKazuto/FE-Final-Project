@@ -9,11 +9,11 @@ export default async function handler(
   const items: CartItem[] = [
     {
       id: "1",
-      name: "Product 1",
-      imageUrl: "/product1.jpg",
+      product_name: "Product 1",
+      image_url: "/product1.jpg",
       price: 100,
       quantity: 2,
-      category: "Sayur",
+      description: "Sayur",
     },
     
   ];
@@ -21,7 +21,7 @@ export default async function handler(
   const summary: OrderSummary = {
     subtotal: 200,
     discount: 20,
-    tax: 18,
+    delivery_cost: 18,
     total: 198,
   };
 
