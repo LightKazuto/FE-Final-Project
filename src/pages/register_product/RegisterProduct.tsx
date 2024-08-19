@@ -28,7 +28,6 @@ interface ProductFormInput {
   stock: number;
   discount: number;
   image_url: string;
-//   image_url: FileList;
 }
 
 const RegisterProduct: React.FC = () => {
@@ -41,11 +40,13 @@ const RegisterProduct: React.FC = () => {
   const [submitSuccess, setSubmitSuccess] = useState(false);
 //   const [resource, setResource] = useState<string | CloudinaryUploadWidgetInfo | undefined>(undefined);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
  
-  const sendImage = async (image: FileList) => {
+  const sendImage = async (image: File): Promise<string> => {
     const formData = new FormData();
-    formData.append("file", image[0]);    const response = await fetch(
+    formData.append("file", image);    
+    const response = await fetch(
       `${apiBaseUrl}/upload`,
       {
         method: "POST",
@@ -62,37 +63,33 @@ const RegisterProduct: React.FC = () => {
     try {
       // Convert the image to a format suitable for your backend (e.g., FormData)
       const formData = new FormData();
-      formData.append("productName", data.productName);
+      formData.append("product_name", data.productName);
       formData.append("price", data.price.toString());
       formData.append("description", data.description);
       formData.append("category", data.category);
       formData.append("type", data.type);
       formData.append("stock", data.stock.toString());
       formData.append("discount", data.discount.toString());
-      const result = await data.image_url;
-      formData.append("image_url", result);
-      
-    //   console.log(result);
+      formData.append("image_url", data.image_url);
 
-    //   if (typeof data.image_url === "boolean") {
-    //     // If it's a boolean, append it as a string
-    //     formData.append("image_url", data.image_url.toString());
-    //   } else {
-    //     // If it's not a boolean, it must be a Blob object, so append it as is
-    //     formData.append("image_url", data.image_url);
-    //   }
+    
+      const response = await fetch(`${apiBaseUrl}/registerProduct`, {
+        method: "POST",
+        body: formData,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+      });
 
-
-      const response = await fetch(`${apiBaseUrl}/registerProduct`, { method: 'POST', body: formData, headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-      }});
-      setSubmitSuccess(true);
-      router.push("/products"); // Navigate to products page or wherever appropriate
+      if (response.ok) {
+        setSubmitSuccess(true);
+        router.push("/products"); // Navigate to products page or wherever appropriate
+      } else {
+        console.error("Failed to register product");
+      }
     } catch (error) {
-      console.error(error);
-      setSubmitError("Failed to register product");
-      console.log(error);
+      setSubmitError("Failed to register product: ");
+      console.log("Error:", error);
     }
   };
 
@@ -248,12 +245,21 @@ const RegisterProduct: React.FC = () => {
           <input
             accept="image/*"
             type="file"
-            onChange={(e) => {
-                if (e.target.files) {
-                    const secure_url = sendImage(e.target.files);
-                    onChange(secure_url);
-                  }
-              console.log(e.target.files);
+            // onChange={(e) => {
+            //     if (e.target.files) {
+            //         const secure_url = sendImage(e.target.files);
+            //         onChange(secure_url);
+            //       }
+            //   console.log(e.target.files);
+            // }}
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                  setLoading(true);
+                  const secureUrl = await sendImage(file);
+                  onChange(secureUrl);
+                  setLoading(false);
+              }
             }}
             onBlur={onBlur}
             ref={ref}
@@ -261,7 +267,7 @@ const RegisterProduct: React.FC = () => {
         )}
       />
       <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        {isSubmitting ? "Registering..." : "Register Product"}
+         {loading ? "Uploading..." : isSubmitting ? "Registering..." : "Register Product"}
       </Button>
       <Snackbar open={submitSuccess} autoHideDuration={6000}>
         <Alert severity="success">Product registered successfully!</Alert>
