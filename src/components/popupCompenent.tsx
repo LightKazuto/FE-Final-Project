@@ -11,9 +11,10 @@ interface ModalProps {
     description: string;
     stock: number;
   } | null;
+  userRole: "user" | "seller" | "guest";
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product, userRole}) => {
   if (!isOpen || !product) return null;
 
   if (product.stock <= 0) return null;
@@ -44,12 +45,30 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
             </div>
           </div>
         </div>
-        <div className="float-right pt-5">
-          <button
-            className="px-4 py-2 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300">
-            + Keranjang
-          </button>
-        </div>
+        {userRole === "user" && (
+          <div className="float-right pt-5">
+            <button
+              className="px-4 py-2 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300">
+              + Keranjang
+            </button>
+          </div>
+          )}
+        {userRole === "seller" && (
+          <div className="float-right pt-5">
+            <button
+              className="hidden px-4 py-2 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300">
+              + Keranjang
+            </button>
+          </div>
+          )}
+        {userRole === "guest" && (
+          <div className="float-right pt-5">
+            <button
+              className="hidden px-4 py-2 bg-green-400 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300">
+              + Keranjang
+            </button>
+          </div>
+          )}
       </div>
     </div>
   );
