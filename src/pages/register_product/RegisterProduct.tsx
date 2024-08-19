@@ -35,10 +35,11 @@ const RegisterProduct: React.FC = () => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ProductFormInput>();
   const [submitSuccess, setSubmitSuccess] = useState(false);
-  const [resource, setResource] = useState<string | CloudinaryUploadWidgetInfo | undefined>(undefined);
+//   const [resource, setResource] = useState<string | CloudinaryUploadWidgetInfo | undefined>(undefined);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
  
@@ -68,7 +69,10 @@ const RegisterProduct: React.FC = () => {
       formData.append("type", data.type);
       formData.append("stock", data.stock.toString());
       formData.append("discount", data.discount.toString());
-      formData.append("image_url", data.image_url);
+      const result = await data.image_url;
+      formData.append("image_url", result);
+      
+    //   console.log(result);
 
     //   if (typeof data.image_url === "boolean") {
     //     // If it's a boolean, append it as a string
@@ -88,6 +92,7 @@ const RegisterProduct: React.FC = () => {
     } catch (error) {
       console.error(error);
       setSubmitError("Failed to register product");
+      console.log(error);
     }
   };
 
@@ -245,7 +250,8 @@ const RegisterProduct: React.FC = () => {
             type="file"
             onChange={(e) => {
                 if (e.target.files) {
-                    sendImage(e.target.files);
+                    const secure_url = sendImage(e.target.files);
+                    onChange(secure_url);
                   }
               console.log(e.target.files);
             }}
