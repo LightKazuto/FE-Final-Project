@@ -27,8 +27,8 @@ interface ProductFormInput {
   type: string;
   stock: number;
   discount: number;
-//   image_url: string;
-  image_url: FileList;
+  image_url: string;
+//   image_url: FileList;
 }
 
 const RegisterProduct: React.FC = () => {
@@ -41,7 +41,21 @@ const RegisterProduct: React.FC = () => {
   const [resource, setResource] = useState<string | CloudinaryUploadWidgetInfo | undefined>(undefined);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
-
+//   const [uploading, setUploading] = useState(false);
+ 
+  const sendImage = async (image: FileList) => {
+    const formData = new FormData();
+    formData.append("file", image[0]);    const response = await fetch(
+      `${apiBaseUrl}/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    return data.secure_url;
+  };
+  
   const onSubmit: SubmitHandler<ProductFormInput> = async (data) => {
     try {
       // Convert the image to a format suitable for your backend (e.g., FormData)
@@ -53,7 +67,7 @@ const RegisterProduct: React.FC = () => {
       formData.append("type", data.type);
       formData.append("stock", data.stock.toString());
       formData.append("discount", data.discount.toString());
-      formData.append("image_url", data.image_url[0]);
+      formData.append("image_url", data.image_url);
 
     //   if (typeof data.image_url === "boolean") {
     //     // If it's a boolean, append it as a string
@@ -226,7 +240,10 @@ const RegisterProduct: React.FC = () => {
             accept="image/*"
             type="file"
             onChange={(e) => {
-              onChange(e.target.files); // Set the files using the onChange method provided by react-hook-form
+                if (e.target.files) {
+                    sendImage(e.target.files);
+                  }
+              console.log(e.target.files);
             }}
             onBlur={onBlur}
             ref={ref}
