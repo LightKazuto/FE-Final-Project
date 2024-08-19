@@ -18,11 +18,13 @@ interface ProductResponse {
 
 export default function Products() {
   const [error, setError] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState<"user" | "seller" | "guest">("guest");
   const [products, setProducts] = useState<ProductResponse | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const role = 'user';
 
   const getAllProducts = async () => {
     try {
@@ -44,6 +46,13 @@ export default function Products() {
 
   useEffect(() => {
     getAllProducts();
+  }, []);
+
+    useEffect(() => {
+    const storedUserRole = localStorage.getItem("userRole") as "user" | "seller" | "guest" | null;
+    if (storedUserRole) {
+      setUserRole(storedUserRole);
+    }
   }, []);
 
   const openModal = (product: ProductData) => {
@@ -110,6 +119,7 @@ export default function Products() {
         isOpen={isModalOpen}
         onClose={closeModal}
         product={selectedProduct}
+        userRole={userRole}
       />
     </div>
   );
