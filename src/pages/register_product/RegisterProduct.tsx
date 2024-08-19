@@ -27,8 +27,8 @@ interface ProductFormInput {
   type: string;
   stock: number;
   discount: number;
-  image_url: string;
-  image: FileList;
+//   image_url: string;
+  image_url: FileList;
 }
 
 const RegisterProduct: React.FC = () => {
@@ -53,7 +53,7 @@ const RegisterProduct: React.FC = () => {
       formData.append("type", data.type);
       formData.append("stock", data.stock.toString());
       formData.append("discount", data.discount.toString());
-      formData.append("image_url", data.image_url.toString());
+      formData.append("image_url", data.image_url[0]);
 
     //   if (typeof data.image_url === "boolean") {
     //     // If it's a boolean, append it as a string
@@ -192,7 +192,7 @@ const RegisterProduct: React.FC = () => {
           />
         )}
       />
-      <Controller
+      {/* <Controller
         name="image_url"
         control={control}
         render={({ field }) => (
@@ -201,7 +201,7 @@ const RegisterProduct: React.FC = () => {
               uploadPreset="cloudinary_upload_next_app"
               onSuccess={(result, { widget }) => {
                 setResource(result?.info); // { public_id, secure_url, etc }
-                console.log(resource);
+                console.log(result?.info);
               }}
             >
               {({ open }) => (
@@ -215,6 +215,22 @@ const RegisterProduct: React.FC = () => {
                 )}
                 </CldUploadWidget>
           </>
+        )}
+      /> */}
+      <Controller
+        name="image_url"
+        control={control}
+        defaultValue={undefined}
+        render={({ field: { onChange, onBlur, ref } }) => (
+          <input
+            accept="image/*"
+            type="file"
+            onChange={(e) => {
+              onChange(e.target.files); // Set the files using the onChange method provided by react-hook-form
+            }}
+            onBlur={onBlur}
+            ref={ref}
+          />
         )}
       />
       <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
