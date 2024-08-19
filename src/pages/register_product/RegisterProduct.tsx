@@ -41,7 +41,6 @@ const RegisterProduct: React.FC = () => {
   const [resource, setResource] = useState<string | CloudinaryUploadWidgetInfo | undefined>(undefined);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const router = useRouter();
-//   const [uploading, setUploading] = useState(false);
  
   const sendImage = async (image: FileList) => {
     const formData = new FormData();
@@ -57,6 +56,8 @@ const RegisterProduct: React.FC = () => {
   };
   
   const onSubmit: SubmitHandler<ProductFormInput> = async (data) => {
+    const token = localStorage.getItem("access_token");
+
     try {
       // Convert the image to a format suitable for your backend (e.g., FormData)
       const formData = new FormData();
@@ -78,7 +79,10 @@ const RegisterProduct: React.FC = () => {
     //   }
 
 
-      const response = await fetch(`${apiBaseUrl}/registerProduct`, { method: 'POST', body: formData });
+      const response = await fetch(`${apiBaseUrl}/registerProduct`, { method: 'POST', body: formData, headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+      }});
       setSubmitSuccess(true);
       router.push("/products"); // Navigate to products page or wherever appropriate
     } catch (error) {
