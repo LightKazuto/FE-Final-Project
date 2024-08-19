@@ -12,10 +12,12 @@ export default async function handler(
       product_name: "Product 1",
       image_url: "/product1.jpg",
       price: 100,
+      discount: 0,
       quantity: 2,
+      stock: 4,
       description: "Sayur",
+      total_price: 200
     },
-    
   ];
 
   const summary: OrderSummary = {
