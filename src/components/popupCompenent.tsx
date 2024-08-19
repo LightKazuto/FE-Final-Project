@@ -26,11 +26,11 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, product }) => {
           className="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
           &times;
         </button>
-        <div className="flex items-center pl-4">
+        <div className="flex items-center pl-4 h-auto">
           <img
             src={product.image_url}
             alt={product.product_name}
-            className="w-1/3 h-48 object-cover rounded-lg"
+            className="w-1/3 h-auto object-cover rounded-lg"
           />
           <div className="ml-10">
             <h2 className="text-2xl font-bold mb-3">{product.product_name}</h2>
