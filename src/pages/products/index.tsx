@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Modal from "../../components/popupCompenent";
+import Modal from "../../components/popupCompenent"; // Ensure the import path is correct
 
 const apiHeroku = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -9,7 +9,9 @@ interface ProductData {
   product_name: string;
   price: number;
   stock: number;
-  description: string; 
+  description: string;
+  from_user_id: number;
+  to_user_id: number;
 }
 
 interface ProductResponse {
@@ -18,13 +20,19 @@ interface ProductResponse {
 
 export default function Products() {
   const [error, setError] = useState<string | null>(null);
-  const [userRole, setUserRole] = useState<"user" | "seller" | "guest">("guest");
+  const [userRole, setUserRole] = useState<"user" | "seller" | "guest">(
+    "guest"
+  );
   const [products, setProducts] = useState<ProductResponse | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<ProductData | null>(
     null
   );
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const role = 'user';
+  const [toUserId, setToUserId] = useState<number>(0);
+  const [userId, setUserId ] = useState<number>(0);
+
+
+  // console.log(from_user_id, to_user_id);
 
   const getAllProducts = async () => {
     try {
@@ -43,15 +51,23 @@ export default function Products() {
       setError(error.message);
     }
   };
-
   useEffect(() => {
     getAllProducts();
   }, []);
 
-    useEffect(() => {
-    const storedUserRole = localStorage.getItem("userRole") as "user" | "seller" | "guest" | null;
+  useEffect(() => {
+    const storedUserRole = localStorage.getItem("userRole") as
+      | "user"
+      | "seller"
+      | "guest"
+      | null;
     if (storedUserRole) {
       setUserRole(storedUserRole);
+    }
+
+    const storedFromUserId = localStorage.getItem("fromUserId");
+    if (storedFromUserId) {
+      setFromUserId(Number(storedFromUserId));
     }
   }, []);
 
@@ -65,6 +81,10 @@ export default function Products() {
     setSelectedProduct(null);
   };
 
+  const handleAddToCart = (productId: number) => {
+    console.log(`Product with ID ${productId} added to cart.`);
+  };
+
   if (error) {
     return <p className="text-red-500 text-center">Error: {error}</p>;
   }
@@ -75,7 +95,6 @@ export default function Products() {
 
   return (
     <div className="flex flex-col items-center w-full pt-10 bg-white relative inline-block pb-16">
-      
       <div className="bg-white w-1/4 absolute top-30 right-30 left-30 bottom-30">
         <p className="text-3xl font-bold text-center text-gray-600 mt-[-20px]">
           Popular Products
@@ -84,7 +103,6 @@ export default function Products() {
 
       <div className="w-4/6 border-t-5 border-gray-300 shadow-2xl pt-10">
         <div className="flex flex-wrap justify-center gap-8 p-10 mt-5">
-          
           {products.products.map((product) => (
             <div
               key={product.id}
@@ -111,7 +129,6 @@ export default function Products() {
               </div>
             </div>
           ))}
-
         </div>
       </div>
 
@@ -120,6 +137,9 @@ export default function Products() {
         onClose={closeModal}
         product={selectedProduct}
         userRole={userRole}
+        onAddToCart={handleAddToCart}
+        to_user_id={setToUserId}
+        user_id={setUserId}
       />
     </div>
   );
