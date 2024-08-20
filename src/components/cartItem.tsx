@@ -7,6 +7,7 @@ interface CartItemProps {
   onDeleteItem: (itemId: string) => void;
 }
 
+
 const CartItem: React.FC<CartItemProps> = ({
   item,
   onUpdateQuantity,
