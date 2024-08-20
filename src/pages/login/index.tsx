@@ -65,6 +65,7 @@ const LoginPage: React.FC = () => {
           localStorage.setItem('token', 'authenticated'),
           localStorage.setItem('userRole', result.role),
           localStorage.setItem('access_token', result.access_token),
+          localStorage.setItem('user_id', result.id),
         ]);
 
         const storedRole = await localStorage.getItem('userRole');
