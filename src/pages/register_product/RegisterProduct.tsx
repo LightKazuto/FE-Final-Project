@@ -160,9 +160,9 @@ const RegisterProduct: React.FC = () => {
               label="Category"
               sx={{ mt: 2 }}
             >
-              <MenuItem value="local_fruit">Local Fruit</MenuItem>
-              <MenuItem value="import_fruit">Import Fruit</MenuItem>
-              <MenuItem value="hydroponic_fruit">Hydroponic Fruit</MenuItem>
+              <MenuItem value="local_product">Local</MenuItem>
+              <MenuItem value="import_product">Import</MenuItem>
+              <MenuItem value="hydroponic_product">Hydroponic</MenuItem>
             </Select>
           </FormControl>
         )}
