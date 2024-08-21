@@ -16,3 +16,17 @@ export interface OrderSummary {
   delivery_cost: number;
   total: number;
 }
+
+
+export interface RegisterTransactionRequest {
+  from_user_id: number;
+  to_user_id: number;
+  product_id: number;
+  product_quantity: number;
+  total_price: number;
+  status: string;
+}
+
+export interface RegisterTransactionResponse {
+  message: string;
+}
