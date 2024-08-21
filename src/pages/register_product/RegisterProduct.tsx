@@ -13,10 +13,11 @@ import Select from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import { Typography } from "@mui/material";
 import InputAdornment from "@mui/material/InputAdornment";
-import { CldUploadWidget } from "next-cloudinary";
+import { CldUploadWidget, CloudinaryUploadWidgetInfo } from "next-cloudinary";
 
 const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 const apiKey = process.env.CLOUDINARY_API_KEY;
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface ProductFormInput {
   productName: string;
@@ -26,50 +27,69 @@ interface ProductFormInput {
   type: string;
   stock: number;
   discount: number;
-  //   productImage: string;
-  productUpload: boolean;
-  //   image: FileList;
+  image_url: string;
 }
 
 const RegisterProduct: React.FC = () => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<ProductFormInput>();
   const [submitSuccess, setSubmitSuccess] = useState(false);
+//   const [resource, setResource] = useState<string | CloudinaryUploadWidgetInfo | undefined>(undefined);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-
+ 
+  const sendImage = async (image: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append("file", image);    
+    const response = await fetch(
+      `${apiBaseUrl}/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+    const data = await response.json();
+    return data.secure_url;
+  };
+  
   const onSubmit: SubmitHandler<ProductFormInput> = async (data) => {
+    const token = localStorage.getItem("access_token");
+
     try {
       // Convert the image to a format suitable for your backend (e.g., FormData)
       const formData = new FormData();
-      formData.append("productName", data.productName);
+      formData.append("product_name", data.productName);
       formData.append("price", data.price.toString());
       formData.append("description", data.description);
       formData.append("category", data.category);
       formData.append("type", data.type);
       formData.append("stock", data.stock.toString());
       formData.append("discount", data.discount.toString());
-      //   formData.append("productImage", data.productImage);
-      if (typeof data.productUpload === "boolean") {
-        // If it's a boolean, append it as a string
-        formData.append("productUpload", data.productUpload.toString());
+      formData.append("image_url", data.image_url);
+
+    
+      const response = await fetch(`${apiBaseUrl}/registerProduct`, {
+        method: "POST",
+        body: formData,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        setSubmitSuccess(true);
+        router.push("/products"); // Navigate to products page or wherever appropriate
       } else {
-        // If it's not a boolean, it must be a Blob object, so append it as is
-        formData.append("productUpload", data.productUpload);
+        console.error("Failed to register product");
       }
-
-      //   formData.append("image", data.image[0]);
-
-      // Submit product data to your backend
-      // e.g., const response = await fetch('/api/products', { method: 'POST', body: formData });
-
-      setSubmitSuccess(true);
-      router.push("/products"); // Navigate to products page or wherever appropriate
     } catch (error) {
-      setSubmitError("Failed to register product");
+      setSubmitError("Failed to register product: ");
+      console.log("Error:", error);
     }
   };
 
@@ -193,39 +213,61 @@ const RegisterProduct: React.FC = () => {
         )}
       />
       {/* <Controller
-        name="productImage"
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <TextField
-            {...field}
-            label="Product Image Link"
-            variant="filled"
-            fullWidth
-          />
-        )}
-      /> */}
-      <Controller
-        name="productUpload"
+        name="image_url"
         control={control}
         render={({ field }) => (
           <>
-            <CldUploadWidget uploadPreset="cloudinary_upload_next_app">
+            <CldUploadWidget
+              uploadPreset="cloudinary_upload_next_app"
+              onSuccess={(result, { widget }) => {
+                setResource(result?.info); // { public_id, secure_url, etc }
+                console.log(result?.info);
+              }}
+            >
               {({ open }) => (
-                <Button
-                  type="button"
-                  variant="contained"
-                  onClick={() => open()}
-                >
-                  Upload Image
-                </Button>
-              )}
-            </CldUploadWidget>
+                    <Button
+                    type="button"
+                    variant="contained"
+                    onClick={() => open()}
+                    >
+                    Upload Image
+                    </Button>
+                )}
+                </CldUploadWidget>
           </>
+        )}
+      /> */}
+      <Controller
+        name="image_url"
+        control={control}
+        defaultValue={undefined}
+        render={({ field: { onChange, onBlur, ref } }) => (
+          <input
+            accept="image/*"
+            type="file"
+            // onChange={(e) => {
+            //     if (e.target.files) {
+            //         const secure_url = sendImage(e.target.files);
+            //         onChange(secure_url);
+            //       }
+            //   console.log(e.target.files);
+            // }}
+            onChange={async (e) => {
+              const file = e.target.files?.[0];
+              if (file) {
+                  setLoading(true);
+                  const secureUrl = await sendImage(file);
+                  onChange(secureUrl);
+                  setLoading(false);
+              }
+            }}
+            onBlur={onBlur}
+            ref={ref}
+          />
         )}
       />
       <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
-        {isSubmitting ? "Registering..." : "Register Product"}
+         {loading ? "Uploading..." : isSubmitting ? "Registering..." : "Register Product"}
       </Button>
       <Snackbar open={submitSuccess} autoHideDuration={6000}>
         <Alert severity="success">Product registered successfully!</Alert>
