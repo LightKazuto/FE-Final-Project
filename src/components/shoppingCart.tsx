@@ -15,7 +15,7 @@ const ShoppingCart: React.FC = () => {
   const [cartItems, setCartItems] = useState<CartItemType[]>([]);
   const [orderSummary, setOrderSummary] = useState<OrderSummaryType>({
     subtotal: 0,
-    discount: 0,
+    total_discount: 0,
     delivery_cost: 0,
     total: 0,
   });

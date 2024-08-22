@@ -12,11 +12,10 @@ export interface CartItem {
 
 export interface OrderSummary {
   subtotal: number;
-  discount: number;
+  total_discount: number;
   delivery_cost: number;
   total: number;
 }
-
 
 export interface RegisterTransactionRequest {
   from_user_id: number;
@@ -29,4 +28,13 @@ export interface RegisterTransactionRequest {
 
 export interface RegisterTransactionResponse {
   message: string;
+}
+
+export interface Transaction {
+  id: string;
+  image_url: string;
+  name: string;
+  description: string;
+  amount: number;
+  date: string;
 }
