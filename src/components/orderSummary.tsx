@@ -1,12 +1,45 @@
 // components/OrderSummary.tsx
-import React from "react";
+import React, { useState } from "react";
 import { OrderSummary as OrderSummaryType } from "../types";
+import CheckoutPopup from '../components/checkoutPopup';
 
 interface OrderSummaryProps {
   summary: OrderSummaryType;
 }
 
+const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
 const OrderSummary: React.FC<OrderSummaryProps> = ({ summary }) => {
+  const [isCheckoutSuccess, setIsCheckoutSuccess] = useState(false);
+
+  const handleCheckout = async () => {
+    const token = localStorage.getItem("access_token");
+    try {
+
+      const response = await fetch(`${apiBaseUrl}/checkout`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch cart items: ${response.statusText}`);
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 1000));
+
+      setIsCheckoutSuccess(true);
+    } catch (error) {
+      console.error('Checkout failed:', error);
+    }
+  };
+
+  const closeSuccessPopup = () => {
+    setIsCheckoutSuccess(false);
+  };
+     
+
   return (
       <div className="space-y-4 rounded-lg border border-gray-200 bg-white p-4 shadow-sm dark:border-gray-700 dark:bg-gray-800 sm:p-6">
         <p className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -28,8 +61,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ summary }) => {
               <dt className="text-base font-normal text-gray-500 dark:text-gray-400">
                 Diskon
               </dt>
-              <dd className="text-base font-medium text-green-600">
-                -Rp {summary.discount}
+              <dd className="text-base font-medium text-red-600">
+                -Rp {summary.total_discount}
               </dd>
             </dl>
 
@@ -56,10 +89,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ summary }) => {
         <a
           href="#"
           className="flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-black hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+          onClick={handleCheckout}
         >
           Proceed to Checkout
         </a>
-
+        {isCheckoutSuccess && <CheckoutPopup onClose={closeSuccessPopup} />}
+        {/* <CheckoutPopup onClose={closeSuccessPopup} /> */}
         <div className="flex items-center justify-center gap-2">
           <span className="text-sm font-normal text-gray-500 dark:text-gray-400">
             {" "}

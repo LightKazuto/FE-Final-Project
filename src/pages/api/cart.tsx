@@ -22,7 +22,7 @@ export default async function handler(
 
   const summary: OrderSummary = {
     subtotal: 200,
-    discount: 20,
+    total_discount: 20,
     delivery_cost: 18,
     total: 198,
   };

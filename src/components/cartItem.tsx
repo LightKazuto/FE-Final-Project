@@ -81,10 +81,13 @@ const CartItem: React.FC<CartItemProps> = ({
               </div>
               <div className="text-end md:order-4 md:w-40">
                 <p className="text-base text-gray-900 dark:text-white">
-                  Rp {item.price}
+                  Rp {item.total_price}
+                </p>
+                <p className="mt-10 text-base text-red-600 dark:text-white">
+                  Rp -{item.total_price * item.discount / 100}
                 </p>
                 <p className="mt-10 text-base font-bold text-gray-900 dark:text-white">
-                  Total: Rp {item.total_price}
+                  Total: Rp {item.total_price - (item.total_price * item.discount / 100)}
                 </p>
               </div>
             </div>
