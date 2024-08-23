@@ -59,19 +59,18 @@ const Modal: React.FC<ModalProps> = ({
         throw new Error("Failed to add item to cart.");
       }
     } catch (err: any) {
-      setError(err.message || "An unexpected error occurred. Please try again.");
+      setError(
+        err.message || "An unexpected error occurred. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
-  // Function to manually format price with dots as thousands separators
   const formatPrice = (price: number) => {
     const numericPrice = Number(price);
     if (isNaN(numericPrice)) return "Invalid price";
-    return numericPrice
-      .toFixed(0) // Ensure there are no decimal places
-      .replace(/\B(?=(\d{3})+(?!\d))/g, '.'); // Add dots as thousands separators
+    return numericPrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
   return (
@@ -97,7 +96,9 @@ const Modal: React.FC<ModalProps> = ({
             <p className="text-lg font-bold mb-4">Qty: {product.stock}</p>
             <div className="text-md text-justify">
               <p className="font-bold">Description:</p>
-              <p className="font-normal">{product.description}</p>
+              <p className="font-normal w-full break-words">
+                {product.description}
+              </p>
             </div>
           </div>
         </div>
@@ -108,8 +109,7 @@ const Modal: React.FC<ModalProps> = ({
               disabled={loading}
               className={`px-4 py-2 ${
                 loading ? "bg-gray-400" : "bg-green-400"
-              } text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300`}
-            >
+              } text-white font-semibold rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-300`}>
               {loading ? "Loading..." : "+ Keranjang"}
             </button>
           </div>
